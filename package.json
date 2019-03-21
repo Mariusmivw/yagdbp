@@ -1,0 +1,13 @@
+{
+	"name": "yagdbp",
+	"description": "Yet another generic Discord-Bot package",
+	"version": "0.0.1",
+	"author": {
+		"name": "Mariusmivw"
+	},
+	"dependencies": {
+		"ws": "^6.2.0"
+	},
+	"main": "Bot.js",
+	"private": true
+}
