@@ -9,5 +9,5 @@
 		"ws": "^6.2.0"
 	},
 	"main": "Bot.js",
-	"private": true
+	"private": false
 }
