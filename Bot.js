@@ -40,7 +40,6 @@ class Bot extends Gateway {
 				callback = data;
 				data = undefined;
 			}
-			data = data && JSON.stringify(data);
 			const req = https.request({
 				'path': `/api${url}`,
 				'host': 'discordapp.com',
@@ -64,9 +63,20 @@ class Bot extends Gateway {
 				})
 			});
 			if (data) {
-				req.setHeader('Content-Type', 'application/json');
-				req.setHeader('Content-Length', Buffer.byteLength(data));
-				req.write(data);
+				let bound;
+				let multipart;
+				req.setHeader('Content-Type', data.file ? 'multipart/form-data; boundary=' + (bound = `${Math.random().toString().slice(2)}`) : 'application/json');
+				if (data.file) {
+					multipart = `--${bound}\r\nContent-Disposition: form-data; name="file"; filename="${data.file.name || data.file.filename || Math.random().toString(36).substring(7)}"\r\nContent-Transfer-Encoding: ${data.file.encoding || 'binary'}\r\n\r\n${data.file.contents || data.file.content || data.file}`;
+					for (const field in data) {
+						if (field != 'file' && field != 'embed') {
+							multipart += `\r\n--${bound}\r\nContent-Disposition: form-data; name="${field}"\r\n\r\n${data[field]}`;
+						}
+					}
+					multipart += `\r\n--${bound}--`;
+				}
+				req.setHeader('Content-Length', Buffer.byteLength(multipart || data));
+				req.write(multipart || JSON.stringify(data));
 			}
 			req.end();
 		});
