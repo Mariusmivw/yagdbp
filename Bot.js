@@ -75,7 +75,7 @@ class Bot extends Gateway {
 					}
 					multipart += `\r\n--${bound}--`;
 				}
-				req.setHeader('Content-Length', Buffer.byteLength(multipart || data));
+				req.setHeader('Content-Length', Buffer.byteLength(multipart || JSON.stringify(data)));
 				req.write(multipart || JSON.stringify(data));
 			}
 			req.end();
